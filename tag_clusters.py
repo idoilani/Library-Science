@@ -1,5 +1,4 @@
 import pandas as pd
-from tqdm import tqdm
 
 def tags_to_questions(tags_clusters, df):
     cluster_2_tags = {}
@@ -18,7 +17,7 @@ def tags_to_questions(tags_clusters, df):
 
     print "Done creating new columns"
 
-    for i in tqdm(range(num_clusters)):
+    for i in range(num_clusters):
         cluster_name = 'cluster_' + str(i)
         tmp_series = df['Tag_sets'].apply(lambda tag_set: (eval(tag_set) & cluster_2_tags[cluster_name]) != set())
         tmp_series = map(int, tmp_series)
