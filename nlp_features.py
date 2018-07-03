@@ -4,7 +4,6 @@ import networkx as nx
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
-from tqdm import tqdm
 import collections
 import json
 
@@ -28,7 +27,7 @@ def count_words_in_dataframe(df, column):
 
     rows = df[column]
     D = collections.defaultdict(lambda : 0)
-    for row in tqdm(rows):
+    for row in rows:
         row = row.lower()
         row = row.replace(".", "")
         row = row.replace("\r\n", "")
@@ -124,7 +123,7 @@ def apply_gensim_model_on_df(gensim_model, df, column='clean_body', is_ans=False
 
     # fill columns
     # bows = []
-    for i, row in tqdm(df.iterrows()):
+    for i, row in df.iterrows():
         if type(row[column]) != float:
             bow = dictionary.doc2bow(row[column].split(" "))
             t = gensim_model.get_document_topics(bow)
@@ -144,7 +143,7 @@ def find_correlations_in_topics(df):
                 'topic_7_qus_Qus', 'topic_8_qus_Qus', 'topic_9_qus_Qus']
 
     D = collections.defaultdict(lambda:0)
-    for i, row in tqdm(df.iterrows()):
+    for i, row in df.iterrows():
         ans_index = np.argmax(row[ans_topics])
         qus_index = np.argmax(row[qus_topics])
         D[(ans_index, qus_index)] += 1

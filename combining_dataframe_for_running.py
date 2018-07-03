@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import networkx as nx
-from tqdm import tqdm
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -13,9 +12,9 @@ import gensim
 Lda = gensim.models.ldamodel.LdaModel
 from gensim import corpora
 
+
 def combine_qus_and_ans(qus_df, ans_df, user_df):
     '''
-
     :param qus_df: question data_frame
     :param ans_df: answer data_frame
     :param user_df: user data_frame
@@ -61,7 +60,8 @@ def apply_gensim_model_on_df(gensim_model, df, column='clean_body', is_ans=False
 
     # fill columns
     bows = []
-    for i, row in tqdm(df.iterrows()):
+    for i, row in df.iterrows():
+        #TODO - remove this
         #if i == 100:
         #    break
         if type(row[column]) != float:

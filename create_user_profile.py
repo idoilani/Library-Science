@@ -4,7 +4,6 @@ import networkx as nx
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
-from tqdm import tqdm
 
 
 class User():
@@ -66,7 +65,7 @@ class list_of_users():
         self.graph = nx.DiGraph()
         self.users = []
 
-        for user_id, gr in tqdm(df.groupby(["OwnerUserId_qus"])):
+        for user_id, gr in df.groupby(["OwnerUserId_qus"]):
             new_user = User(user_id)
             new_user.process_question_df(gr)
             self.users.append(new_user)
@@ -80,7 +79,7 @@ class list_of_users():
         :param users: a list of users (
         :return: networkx objects represents the connections between users
         '''
-        for user in tqdm(self.users):
+        for user in self.users:
             for Id in user.users_who_replied_to_question:
                 self.graph.add_edge(Id, user.id_user)
 

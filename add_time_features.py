@@ -4,18 +4,13 @@ from dateutil.parser import parse
 import datetime
 from collections import OrderedDict
 
-# In[253]:
-
-
-project_dir = "/Users/gideontietz/Downloads/rquestions"  # Todo: change path!!!
+project_dir = "/Users/gideontietz/Downloads/rquestions"  # TODO: change path!!!
 
 
 # Changes z-time to epoch timestamp:  E.G. 2008-09-16T21:40:29Z -->  '1210185365'
 def zdt2epoch(value):
     value = value.replace('Z', '+00:00')
     d = parse(value)
-    # print(d)
-    # epoch = d.time
     return d
 
 
@@ -81,5 +76,7 @@ def add_time_diff_features(merged_df, is_train=True):
 
     if is_train:
         merged_df.to_csv(r'C:/Users/Gal/Documents/Library-Science/data/train_with_time_diff.csv')
+        return merged_df
     else:
         merged_df.to_csv(r'C:/Users/Gal/Documents/Library-Science/data/test_with_time_diff.csv')
+        return merged_df

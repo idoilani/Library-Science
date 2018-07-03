@@ -1,6 +1,5 @@
 import pandas as pd
 import numpy as np
-from tqdm import tqdm
 
 def create_user_total_scores_by_clusters(df):
     # calc total_score_user_question_by_clusters
@@ -42,14 +41,14 @@ def users_scores_clusters(df):
     #score by clusters:
     for cluster in all_clstrs:
         D = {}  #D[user_id] = [#answers, #true_answers]
-        for user, gr in tqdm(df.groupby(u_id)):
+        for user, gr in df.groupby(u_id):
             D[user] = (gr[cluster].sum(), (gr[cluster]*gr[is_acc]).sum())
         tmp_series = df[u_id].apply(lambda user: (0 if D[user][0] == 0 else D[user][1] / float(D[user][0])))
         df['user_score_' + cluster] = tmp_series.astype(float)
 
     # general_score = user_amount_true / user_amount_questions
     D = {}  # D[user_id] = [#answers, #true_answers, diff_clusters]
-    for user, gr in tqdm(df.groupby(u_id)):
+    for user, gr in df.groupby(u_id):
         D[user] = (len(gr), np.count_nonzero(gr[is_acc]))
 
     tmp_series = df[u_id].apply(lambda user: (0 if D[user][0] == 0 else D[user][1] / float(D[user][0])))
