@@ -5,7 +5,7 @@ from collections import defaultdict
 import nlp_features
 import create_user_profile
 
-PROJECT_DIR = r'C:\Users\Gal\Documents\Library-Science'
+PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
 
 
 def clean_data(file_obj, final_file_name):
@@ -14,8 +14,7 @@ def clean_data(file_obj, final_file_name):
     """
     data_frame = pd.read_csv(file_obj)
     data_frame.dropna(axis=0, inplace=True)
-    data_frame.to_csv(final_file_name)
-    return
+    data_frame.to_csv(final_file_name, index=False)
 
 
 def split_to_train_test(qus_df, ans_df, tag_df, train_fraq=0.7):
@@ -68,9 +67,12 @@ def split_to_train_test(qus_df, ans_df, tag_df, train_fraq=0.7):
     merged_df_test['Tag_sets'] = merged_df_test['Id_qus'].apply(lambda qus_id: tag_dict[qus_id])
     merged_df_test = merged_df_test.merge(user_df, left_on="OwnerUserId_ans", right_on="id_user", how="left")
 
+    merged_df_train.fillna(0, inplace=True)
+    merged_df_test.fillna(0, inplace=True)
+
     print "saving data frames"
-    merged_df_train.to_csv(PROJECT_DIR + '\data\\train_df.csv')
-    merged_df_test.to_csv(PROJECT_DIR + '\data\\test_df.csv')
+    merged_df_train.to_csv(PROJECT_DIR + '\data\\train_df.csv', index=False)
+    merged_df_test.to_csv(PROJECT_DIR + '\data\\test_df.csv', index=False)
 
     return merged_df_train, merged_df_test
 

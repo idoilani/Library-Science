@@ -5,6 +5,9 @@ import pickle
 import numpy as np
 import matplotlib.pyplot as plt
 
+PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
+USER_LIST_FILE_NAME = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science/user_list.pkl'
+USER_DATAFRAME_FILE_NAME = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science/users_dataframe.csv'
 
 class User():
     def __init__(self, user_id):
@@ -37,7 +40,6 @@ class User():
     def process_question_df(self, df):
         self.question_ids = set(df["Id_qus"])
 
-    # set feature funcs - TODO - move to another module
     def set_question_total_score(self, df):
         self.question_total_score_user = sum(df[df["Id_qus"].isin(self.question_ids)]['Score_qus'])
 
@@ -119,41 +121,23 @@ class list_of_users():
                     "neg_questions_user", "neg_answers_user", "closeness_centrality_user", "in_degree_user",
                     "out_degree_user"]
         df = pd.DataFrame([{val : getattr(x, val) for val in features} for x in self.users])
-        if output_file == None:
+        if output_file is None:
             return df
         else:
             df.to_csv(output_file, index=False)
             return df
 
 
-
 if __name__ == "__main__":
-    """
-    a = list_of_users.load_obj("C:\Users\Gal\Documents\Library-Science\user_list.pkl")
-    print len(a.graph)
-   # nx.draw(a.graph)
-   # plt.show()
-    print [(a.users[x].closeness_centrality, a.users[x].in_degree, a.users[x].out_degree) for x in range(20) if a.users[x].out_degree != 0]
-    print [(a.users[x].answer_total_score, a.users[x].question_total_score) for x in range(20)]
-    print [(a.users[x].neg_answers, a.users[x].neg_questions) for x in range(20)]
-    """
-
-
-    project_dir = '/Users/Gal/Downloads/rquestions'
-    ans = pd.read_csv(project_dir + '/Answers.csv')
-    qus = pd.read_csv(project_dir + '/Questions.csv')
-    tags = pd.read_csv(project_dir + '/Tags.csv')
+    # Example of usage
+    ans = pd.read_csv(PROJECT_DIR + '/rquestions/Answers.csv')
+    qus = pd.read_csv(PROJECT_DIR + '/rquestions/Questions.csv')
+    tags = pd.read_csv(PROJECT_DIR + '/rquestions/Tags.csv')
 
     users = list_of_users(qus, ans)
     users.create_user_graph()
     users.set_node_properties()
     users.set_user_scores(ans, qus)
-    df = users.generate_data_frame("C:\Users\Gal\Documents\Library-Science\user_dataframe.csv")
-    users.save_obj("C:\Users\Gal\Documents\Library-Science\user_list.pkl")
-
-
-
-
-
-
-
+    # both methods save the dataframes
+    df = users.generate_data_frame(USER_DATAFRAME_FILE_NAME)
+    users.save_obj(USER_LIST_FILE_NAME)

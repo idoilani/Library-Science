@@ -1,5 +1,6 @@
 import pandas as pd
 
+
 def tags_to_questions(tags_clusters, df):
     cluster_2_tags = {}
 
@@ -27,11 +28,11 @@ def tags_to_questions(tags_clusters, df):
 
 
 def insert_hirerchy_answer_col(df):
-    # inserts hirerchy field:
+    # inserts hierarchy field:
     # the number of the answer by chronological order
     date = 'CreationDate_ans'
     pid = 'ParentId' #it's the question id
-    hir = 'hirerchy'
+    hir = 'hierarchy'
 
     # sort values by times
     df = df.sort_values(by=[pid, date])
@@ -42,8 +43,7 @@ def insert_hirerchy_answer_col(df):
         for i, Id in enumerate(Id_qus):
             qus_id_2_hir[Id] = i + 1
 
-    df[hir] = df['Id_qus'].apply(lambda q_id:qus_id_2_hir[q_id])
-
+    df[hir] = df['Id_qus'].apply(lambda q_id: qus_id_2_hir[q_id])
     return df
 
 

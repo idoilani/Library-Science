@@ -4,7 +4,7 @@ from dateutil.parser import parse
 import datetime
 from collections import OrderedDict
 
-project_dir = "/Users/gideontietz/Downloads/rquestions"  # TODO: change path!!!
+PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
 
 
 # Changes z-time to epoch timestamp:  E.G. 2008-09-16T21:40:29Z -->  '1210185365'
@@ -47,7 +47,6 @@ def add_time_diff_features(merged_df, is_train=True):
             if diff <= val:
                 return i
 
-    # TODO - convert to datetime
     def bucketize_timepart(diff):
         '''
         Bucktize the diffs by conventional time intervals like hour, day, week, month, etc.. .

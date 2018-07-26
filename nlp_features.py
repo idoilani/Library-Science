@@ -15,8 +15,8 @@ import nltk
 from nltk.corpus import stopwords
 stopWords = set(stopwords.words('english'))
 
+PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
 
-# TODO - maybe we can do the cleaning better - for example all numbers become to NUM
 def count_words_in_dataframe(df, column):
     '''
     counts words in the column title
@@ -59,25 +59,24 @@ def count_words_in_dataframe(df, column):
                 D[word] += 1
     return D
 
-# TODO - change function name to remove_irrelevant_words
+
 def remove_irrelevant_words(df, D, orig_col='qus', new_col='clean_body'):
     '''
     D is dictionary contains all word seen in the dataframe (can be generated from count_words_in_dataframe)
     :param df: dataframe to be cleaned
-    :param D: dict which its keys are the words seen in text and values are the frequncies (NOT RELEVANT NOW)
+    :param D: dict which its keys are the words seen in text and values are the frequncies
     :return: the clean data_frame
     '''
     legal_words = set(D.keys())
-    def clean_question(qus):
-        qus = qus.lower()
-        qus = ' '.join([x for x in qus.split(" ") if x in legal_words])
-        return qus
+    def clean_column(col):
+        col = col.lower()
+        col = ' '.join([x for x in col.split(" ") if x in legal_words])
+        return col
 
-    df[new_col] = df[orig_col].apply(clean_question)
+    df[new_col] = df[orig_col].apply(clean_column)
     return df
 
 
-# TODO - add more documentation on this function
 def my_lda(df, column_name="clean_body", number_of_topics=10, lda_model_name="my_lda_model_qus_10_topics"):
     '''
     takes a data_frame and build an lda model for it
@@ -132,28 +131,27 @@ def apply_gensim_model_on_df(gensim_model, df, column='clean_body', is_ans=False
     return df
 
 
-
-# TODO - for notebook
+# uses for research - please see usage in notebook
 def find_correlations_in_topics(df):
-    ans_topics = ['topic_0_qus_Ans', 'topic_1_qus_Ans', 'topic_2_qus_Ans', 'topic_3_qus_Ans',
-                'topic_4_qus_Ans', 'topic_5_qus_Ans', 'topic_6_qus_Ans', 'topic_7_qus_Ans', 'topic_8_qus_Ans',
-                'topic_9_qus_Ans']
-    qus_topics = ['topic_0_qus_Qus', 'topic_1_qus_Qus',
-                'topic_2_qus_Qus', 'topic_3_qus_Qus', 'topic_4_qus_Qus', 'topic_5_qus_Qus', 'topic_6_qus_Qus',
-                'topic_7_qus_Qus', 'topic_8_qus_Qus', 'topic_9_qus_Qus']
+    ans_topics = ['topic_0_ans', 'topic_1_ans', 'topic_2_ans', 'topic_3_ans','topic_4_ans', 'topic_5_ans',
+                  'topic_6_ans', 'topic_7_ans', 'topic_8_ans', 'topic_9_ans']
+    qus_topics = ['topic_0_qus', 'topic_1_qus','topic_2_qus', 'topic_3_qus', 'topic_4_qus', 'topic_5_qus',
+                  'topic_6_qus', 'topic_7_qus', 'topic_8_qus', 'topic_9_qus']
 
-    D = collections.defaultdict(lambda:0)
+    D = collections.defaultdict(lambda: 0)
     for i, row in df.iterrows():
-        ans_index = np.argmax(row[ans_topics])
-        qus_index = np.argmax(row[qus_topics])
+        print row[ans_topics]
+        ans_index = np.argmax(list(row[ans_topics]))
+        qus_index = np.argmax(list(row[qus_topics]))
+        print ans_index , qus_index
         D[(ans_index, qus_index)] += 1
 
     return D
 
-if __name__ == '__main__':
-    project_dir = '/Users/Gal/Downloads/rquestions'
-    #ans = pd.read_csv(project_dir + '/Clean_Answers.csv')
 
+if __name__ == '__main__':
+
+    # In this section we looked for correlations in Accepted\Rejected answers
     train = pd.read_csv("C:\\Users\\Gal\\Documents\\Library-Science\\combined_train.csv")
     test = pd.read_csv("C:\\Users\\Gal\\Documents\\Library-Science\\combined_test.csv")
 
@@ -170,35 +168,3 @@ if __name__ == '__main__':
     D_reject = find_correlations_in_topics(df_reject)
     with open('D_reject.json', 'w') as f:
         json.dump(D_reject, f)
-
-    print D_accept.values()
-    print D_reject.values()
-
-    #qus = pd.read_csv(project_dir + '/Clean_Questions.csv')
-    #qus = qus
-    #tags = pd.read_csv(project_dir + '/Clean_Tags.csv')
-
-    # D_title = count_words_in_dataframe(qus, 'Title')
-    #D_body = count_words_in_dataframe(ans, 'Body')
-
-    #clean_ans = clean_data(ans, D_body, 'Body', 'clean_body')
-    #clean_ans.to_csv('C:\\Users\\Gal\\Documents\\Library-Science\\clean_answers_df.csv')
-
-    '''
-    Documentation for later:
-    cleaning questions body:
-
-    qus = pd.read_csv(project_dir + '/Clean_Questions.csv')
-    D_body = count_words_in_dataframe(qus, 'Body')
-    clean_ans = clean_data(qus, D_body, 'Body', 'clean_body')
-
-    cleaning answers body:
-
-    ans = pd.read_csv(project_dir + '/Clean_Answers.csv')
-    D_body = count_words_in_dataframe(ans, 'Body')
-    clean_ans = clean_data(ans, D_body, 'Body', 'clean_body')
-    '''
-
-
-    #print sorted(D_body.iteritems(), key=lambda (k, v): v, reverse=True)[:200]
-    # print sorted(D_title.iteritems(), key=lambda (k, v): v, reverse=True)[:200]

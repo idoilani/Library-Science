@@ -11,17 +11,13 @@ import add_time_features
 import tag_clusters
 import user_reputation
 
-# TODO - add documentation on this module
-# TODO - start a documentation of the whole project (in a doc)
-
-# TODO - move to configuration file
 # load data
-PROJECT_DIR = r'C:\Users\Gal\Documents\Library-Science'
-CLEAN_DATA = True
-LOAD_LDA_MODEL = True
+PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
+LOAD_LDA_MODEL = False
+
 
 # clean the data and add features related to users
-if CLEAN_DATA:
+def main():
     print "cleaning data and save it back to the same directory"
     clean_data.clean_data(PROJECT_DIR + '\data\Answers.csv', PROJECT_DIR + '\data\Clean_Answers.csv')
     clean_data.clean_data(PROJECT_DIR + '\data\Questions.csv', PROJECT_DIR + '\data\Clean_Questions.csv')
@@ -43,8 +39,8 @@ if CLEAN_DATA:
     # load LDA models
     else:
         lda = gensim.models.ldamodel.LdaModel
-        lda_qus = lda.load("C:\\Users\\Gal\\Documents\\Library-Science\\my_lda_model_qus_10_topics")
-        lda_ans = lda.load("C:\\Users\\Gal\\Documents\\Library-Science\\my_lda_model_ans_10_topics")
+        lda_qus = lda.load(PROJECT_DIR + "\\my_lda_model_qus_10_topics")
+        lda_ans = lda.load(PROJECT_DIR + "\\my_lda_model_ans_10_topics")
 
     print "applying gensim models on train and test data frames"
     train_df = nlp_features.apply_gensim_model_on_df(lda_qus, train_df, "clean_qus", False)
@@ -58,10 +54,9 @@ if CLEAN_DATA:
     test_df = add_time_features.add_time_diff_features(test_df, False)
 
     # save date_frames with nlp features
-    train_df.to_csv(PROJECT_DIR + '\\data\\train_df_with_nlp_topics.csv')
-    test_df.to_csv(PROJECT_DIR + '\\data\\test_df_with_nlp_topics.csv')
+    train_df.to_csv(PROJECT_DIR + '\\data\\train_df_with_nlp_topics.csv', index=False)
+    test_df.to_csv(PROJECT_DIR + '\\data\\test_df_with_nlp_topics.csv', index=False)
 
-    # TODO - add code that build the tag cluster
     # read tags cluster
     tags_cluster_df = pd.read_csv(PROJECT_DIR + '\\data\\tags_clusters2.csv')
 
@@ -78,8 +73,9 @@ if CLEAN_DATA:
     train_df = user_reputation.create_user_total_scores_by_clusters(train_df)
 
     # save final data frame
-    train_df.to_csv(r'C:/Users/Gal/Documents/Library-Science/data/train_with_user_profile.csv')
+    train_df.to_csv(PROJECT_DIR + "/data/train_with_user_profile.csv", index=False)
+
 
 if __name__ == "__main__":
-    # load data
+    main()
     print "Done"
