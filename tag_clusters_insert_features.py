@@ -1,6 +1,9 @@
 import pandas as pd
 from tqdm import tqdm
 
+PROJECT_DIR = '/Users/Gal/Documents/Repositories/Workshop-in-Data-Science/'
+
+
 def add_cluster_0_1_to_question_by_Tag_sets(tags_clusters, df):
     # ADD foreach cluster i the field cluster_i:
     #   cluster_i[question] = 0/1 if the question's
@@ -26,6 +29,7 @@ def add_cluster_0_1_to_question_by_Tag_sets(tags_clusters, df):
 
     return df
 
+
 def add_users_scores_clusters_to_train(df):
     # WARNING: this function consider the result of isAcceptedAnswer
     # ONLY USE ON TRAIN
@@ -42,9 +46,10 @@ def add_users_scores_clusters_to_train(df):
     is_acc = 'IsAcceptedAnswer'
     all_clstrs = filter(lambda field: str(field).startswith('cluster_'), list(df))
 
-    #score by clusters:
+    # score by clusters:
     for cluster in all_clstrs:
-        D = {}  #D[user_id] = [#answers, #true_answers]
+        # D[user_id] = [#answers, #true_answers]
+        D = {}
         for user, gr in tqdm(df.groupby(u_id)):
             D[user] = [0, 0]
             D[user][0] = gr[cluster].sum()
@@ -53,7 +58,8 @@ def add_users_scores_clusters_to_train(df):
         df['user_score_' + cluster] = tmp_series.astype(float)
 
     # general_score = user_amount_true / user_amount_questions
-    D = {}  # D[user_id] = [#answers, #true_answers, diff_clusters]
+    # D[user_id] = [#answers, #true_answers, diff_clusters]
+    D = {}
     for user, gr in tqdm(df.groupby(u_id)):
         D[user] = [0, 0]
         D[user][0] = len(gr)
@@ -62,6 +68,7 @@ def add_users_scores_clusters_to_train(df):
     df['user_score_general'] = tmp_series.astype(float)
 
     return df
+
 
 def add_users_scores_clusters_to_test(df, train):
     # foreach u_id, joins it's user scores,
@@ -76,6 +83,7 @@ def add_users_scores_clusters_to_test(df, train):
     df = df.merge(df2, left_on=u_id, right_on=u_id, how='left')
     df = df.fillna(0)
     return df
+
 
 def create_user_total_scores_by_clusters(df):
     # calc total_score_user_question_by_clusters
@@ -99,6 +107,7 @@ def create_user_total_scores_by_clusters(df):
 
     return df
 
+
 def add_list_of_tags_to_question(df, tags):
     # ADD field 'all_tags'
     # that is a list of all the tags of the question
@@ -108,6 +117,7 @@ def add_list_of_tags_to_question(df, tags):
     df = df.set_index('index_for_join').join(tags.set_index('Id'))
     df.loc[df['all_tags'].isnull(), ['all_tags']] = df.loc[df['all_tags'].isnull(), 'all_tags'].apply(lambda x: [])
     return df
+
 
 def tags_to_questions(tags, df_train, df_test, tags_clusters):
     # train = large(first)
@@ -123,7 +133,7 @@ def tags_to_questions(tags, df_train, df_test, tags_clusters):
     df_train = add_cluster_0_1_to_question_by_Tag_sets(tags_clusters, df_train)
     df_train = add_users_scores_clusters_to_train(df_train)
     df_train = create_user_total_scores_by_clusters(df_train)
-    df_train.to_csv(project_dir + '/train_with_tag_clusters_and_user_scores.csv')
+    df_train.to_csv(PROJECT_DIR + '/train_with_tag_clusters_and_user_scores.csv', index=False)
 
     # create test:
     df_test[u_id] = df_test[u_id].fillna(0)
@@ -131,6 +141,5 @@ def tags_to_questions(tags, df_train, df_test, tags_clusters):
     df_test = add_cluster_0_1_to_question_by_Tag_sets(tags_clusters, df_test)
     df_test = add_users_scores_clusters_to_test(df_test, df_train)
     df_test = create_user_total_scores_by_clusters(df_test)
-    df_test.to_csv(project_dir + '/test_with_tag_clusters_and_user_scores.csv')
+    df_test.to_csv(PROJECT_DIR + '/test_with_tag_clusters_and_user_scores.csv', index=False)
 
-    

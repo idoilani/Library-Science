@@ -140,10 +140,8 @@ def find_correlations_in_topics(df):
 
     D = collections.defaultdict(lambda: 0)
     for i, row in df.iterrows():
-        print row[ans_topics]
         ans_index = np.argmax(list(row[ans_topics]))
         qus_index = np.argmax(list(row[qus_topics]))
-        print ans_index , qus_index
         D[(ans_index, qus_index)] += 1
 
     return D

@@ -6,12 +6,14 @@ from sklearn.cluster import SpectralClustering
 import itertools
 from numpy import linalg as la
 
+
 def create_dict_from_dataframe(data_tags, field_key, field_value):
     # D[field_key] = [val1, val2, ..., valn]
     # vals are the dieffrent values of field_value appeared with field_key
     #D = {tag: tag_info["Id"].tolist() for tag, tag_info in data_tags.groupby("Tag")}
     D = {key: key_info[field_value].tolist() for key, key_info in data_tags.groupby(field_key)}
     return D
+
 
 def create_graph_from_dict(D):
     G = nx.Graph()
@@ -28,8 +30,10 @@ def create_graph_from_dict(D):
                 print i
     return G
 
+
 def save_graph(G):
     return
+
 
 def draw_weighted_graph(G):
     pos = nx.spring_layout(G)
@@ -37,11 +41,13 @@ def draw_weighted_graph(G):
     nx.draw_networkx_edge_labels(G, pos)
     plt.show()
 
+
 def create_clusters_from_graph(G, amount_clusters=50, amount_iterations=10000):
     adj_mat = nx.to_numpy_matrix(G)
     sc = SpectralClustering(amount_clusters, affinity='precomputed', n_init=amount_iterations)
     sc.fit(adj_mat)
     return sc
+
 
 def save_clusters(G, sc, data_tags, name_file):
     all_nodes = list(G.nodes)
@@ -54,6 +60,7 @@ def save_clusters(G, sc, data_tags, name_file):
     df2 = pd.DataFrame(data=tags_not_in_graph)
     df = df.append(df2)
     df.to_csv(name_file)
+
 
 def print_all_clusters(G, sc):
     print('----------\nspectral clustering:')
@@ -70,12 +77,15 @@ def print_all_clusters(G, sc):
         else:
             print "over 200 items"
 
+
 def save_graph(G, file_name):
     nx.write_gpickle(G, file_name)
+
 
 def upload_graph(file_name):
     G = nx.read_gpickle(file_name)
     return G
+
 
 def print_dictionary_statistics(D):
     print "#keys in D:", len(D)
@@ -86,6 +96,7 @@ def print_dictionary_statistics(D):
     print "keys with len(val)>100:", sorted([(i, len(D[i])) for i in filter(lambda x: len(D[x])>100, D.iterkeys())],key=(lambda x: x[1]))
 
     print "#edges:", sum([int(i*(i-1)*0.5*counter[i]) for i in counter.iterkeys()])
+
 
 def print_graph_statistics(G):
     print "---------\nGraph statistics:"
@@ -102,6 +113,7 @@ def print_graph_statistics(G):
     print "graph weights:", weight_count
     print "edges in G:", len(G.edges)
 
+
 def add_edges_between_2distance_nodes_to_G(G):
     adj_mat = nx.to_numpy_matrix(G)
     adj_mat_dbld = la.matrix_power(adj_mat, 2)
@@ -115,6 +127,7 @@ def add_edges_between_2distance_nodes_to_G(G):
                 else:
                     G.add_edge(node1, node2, weight=1)
     return G
+
 
 def create_and_save_tags_graph(tags, name_save_graph):
     # D = {'q1': [tag1, tag2], 'q2': [tag1, tag3], ...}

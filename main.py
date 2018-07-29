@@ -10,6 +10,8 @@ import gensim
 import add_time_features
 import tag_clusters
 import user_reputation
+import answers_hierarchy
+import tag_clusters_insert_features
 
 # load data
 PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
@@ -65,8 +67,12 @@ def main():
     test_df = tag_clusters.tags_to_questions(tags_cluster_df, test_df)
 
     # add answer hierarchy
-    train_df = tag_clusters.insert_hirerchy_answer_col(train_df)
-    test_df = tag_clusters.insert_hirerchy_answer_col(test_df)
+    train_df = answers_hierarchy.insert_hirerchy_answer_col(train_df)
+    test_df = answers_hierarchy.insert_hirerchy_answer_col(test_df)
+
+    tag_clusters.create_tag_clusters(tags, PROJECT_DIR + "/tag_clusters.gpkl")
+    tag_clusters = tag_clusters.upload_graph(PROJECT_DIR + "/tag_clusters.gpkl")
+    tag_clusters_insert_features.tags_to_questions(tags, train_df, test_df, tag_clusters)
 
     # add user reputation features
     train_df = user_reputation.users_scores_clusters(train_df)
@@ -74,6 +80,7 @@ def main():
 
     # save final data frame
     train_df.to_csv(PROJECT_DIR + "/data/train_with_user_profile.csv", index=False)
+    test_df.to_csv(PROJECT_DIR + "/data/test_with_user_profile.csv", index=False)
 
 
 if __name__ == "__main__":

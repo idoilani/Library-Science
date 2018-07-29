@@ -9,6 +9,7 @@ PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
 USER_LIST_FILE_NAME = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science/user_list.pkl'
 USER_DATAFRAME_FILE_NAME = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science/users_dataframe.csv'
 
+
 class User():
     def __init__(self, user_id):
         self.id_user = user_id
