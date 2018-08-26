@@ -3,8 +3,7 @@ import numpy as np
 from dateutil.parser import parse
 import datetime
 from collections import OrderedDict
-
-PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
+from config import PROJECT_DIR
 
 
 # Changes z-time to epoch timestamp:  E.G. 2008-09-16T21:40:29Z -->  '1210185365'
