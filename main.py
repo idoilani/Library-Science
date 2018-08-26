@@ -9,12 +9,10 @@ import nlp_features
 import gensim
 import add_time_features
 import tag_clusters
-import user_reputation
 import answers_hierarchy
 import tag_clusters_insert_features
-
+from config import PROJECT_DIR
 # load data
-PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
 LOAD_LDA_MODEL = False
 
 
@@ -59,24 +57,14 @@ def main():
     train_df.to_csv(PROJECT_DIR + '\\data\\train_df_with_nlp_topics.csv', index=False)
     test_df.to_csv(PROJECT_DIR + '\\data\\test_df_with_nlp_topics.csv', index=False)
 
-    # read tags cluster
-    tags_cluster_df = pd.read_csv(PROJECT_DIR + '\\data\\tags_clusters2.csv')
-
-    # add clusters to each question
-    train_df = tag_clusters.tags_to_questions(tags_cluster_df, train_df)
-    test_df = tag_clusters.tags_to_questions(tags_cluster_df, test_df)
-
     # add answer hierarchy
     train_df = answers_hierarchy.insert_hirerchy_answer_col(train_df)
     test_df = answers_hierarchy.insert_hirerchy_answer_col(test_df)
 
-    tag_clusters.create_tag_clusters(tags, PROJECT_DIR + "/tag_clusters.gpkl")
-    tag_clusters = tag_clusters.upload_graph(PROJECT_DIR + "/tag_clusters.gpkl")
-    tag_clusters_insert_features.tags_to_questions(tags, train_df, test_df, tag_clusters)
-
-    # add user reputation features
-    train_df = user_reputation.users_scores_clusters(train_df)
-    train_df = user_reputation.create_user_total_scores_by_clusters(train_df)
+    # create tags clusters and add related features
+    tag_clusters.create_tag_clusters(tags, "tag_clusters.csv")
+    tags_cluster_df = pd.read_csv('tag_clusters.csv')
+    tag_clusters_insert_features.tags_to_questions(tags, train_df, test_df, tags_cluster_df)
 
     # save final data frame
     train_df.to_csv(PROJECT_DIR + "/data/train_with_user_profile.csv", index=False)

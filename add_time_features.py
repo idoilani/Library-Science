@@ -74,8 +74,8 @@ def add_time_diff_features(merged_df, is_train=True):
     merged_df['diff_interval_bucket'] = merged_df['timeDiff'].apply(lambda x: bucketize_timepart(x))
 
     if is_train:
-        merged_df.to_csv(r'C:/Users/Gal/Documents/Library-Science/data/train_with_time_diff.csv')
+        merged_df.to_csv(PROJECT_DIR + '\\data\\train_with_time_diff.csv')
         return merged_df
     else:
-        merged_df.to_csv(r'C:/Users/Gal/Documents/Library-Science/data/test_with_time_diff.csv')
+        merged_df.to_csv(PROJECT_DIR + '\\data\\test_with_time_diff.csv')
         return merged_df

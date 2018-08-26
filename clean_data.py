@@ -4,8 +4,7 @@ from sklearn.utils import shuffle
 from collections import defaultdict
 import nlp_features
 import create_user_profile
-
-PROJECT_DIR = r'/Users/Gal/Documents/Repositories/Workshop-in-Data-Science'
+from config import PROJECT_DIR
 
 
 def clean_data(file_obj, final_file_name):

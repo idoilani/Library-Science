@@ -1,7 +1,6 @@
 import pandas as pd
 from tqdm import tqdm
-
-PROJECT_DIR = '/Users/Gal/Documents/Repositories/Workshop-in-Data-Science/'
+from config import PROJECT_DIR
 
 
 def add_cluster_0_1_to_question_by_Tag_sets(tags_clusters, df):
