@@ -149,8 +149,8 @@ def create_tag_clusters(tags, name_tag_clusters_table):
     biggest_conn = max(list(nx.connected_component_subgraphs(G)), key=lambda conn: len(conn))
     G = biggest_conn
 
-    amount_clusters = 3
-    amount_iterations = 50
+    amount_clusters = 50
+    amount_iterations = 3
     sc = create_clusters_from_graph(G, amount_iterations=amount_iterations, amount_clusters=amount_clusters)
     save_clusters(G, sc, tags, name_tag_clusters_table)
 
